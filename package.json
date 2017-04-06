@@ -1,0 +1,17 @@
+{
+    "buildNpmdoc":"gulp-coffeelint",
+    "devDependencies": {
+        "gulp-coffeelint": "*",
+        "electron-lite": "kaizhu256/node-electron-lite#alpha",
+        "utility2": "kaizhu256/node-utility2#alpha"
+    },
+    "name":"npmdoc-gulp-coffeelint",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/npmdoc/node-npmdoc-gulp-coffeelint"
+    },
+    "scripts": {
+        "build-ci": "utility2 shReadmeTest build_ci.sh"
+    },
+    "version": "0.0.1"
+}
