@@ -1,0 +1,225 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/janraasch/gulp-coffeelint#readme">gulp-coffeelint (v0.6.0)</a>
+</h1>
+<h4>Lint your CoffeeScript using gulp and CoffeeLint</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-coffeelint">module gulp-coffeelint</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.reporter">
+            function <span class="apidocSignatureSpan">gulp-coffeelint.</span>reporter
+            <span class="apidocSignatureSpan">(type)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-coffeelint.</span>utils</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-coffeelint.utils">module gulp-coffeelint.utils</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.utils.createPluginError">
+            function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>createPluginError
+            <span class="apidocSignatureSpan">(message)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.utils.formatOutput">
+            function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>formatOutput
+            <span class="apidocSignatureSpan">(errorReport, opt, literate)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.utils.isLiterate">
+            function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>isLiterate
+            <span class="apidocSignatureSpan">(file)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-coffeelint" id="apidoc.module.gulp-coffeelint">module gulp-coffeelint</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-coffeelint.reporter" id="apidoc.element.gulp-coffeelint.reporter">
+        function <span class="apidocSignatureSpan">gulp-coffeelint.</span>reporter
+        <span class="apidocSignatureSpan">(type)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">reporter = function (type) {
+  if (type === 'fail') {
+    return failReporter();
+  }
+  if (type === 'failOnWarning') {
+    return failOnWarningReporter();
+  }
+  if (type == null) {
+    type = 'coffeelint-stylish';
+  }
+  reporter = loadReporter(type);
+  if (typeof reporter !== 'function') {
+    throw createPluginError(type + " is not a valid reporter");
+  }
+  return reporterStream(reporter);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+```javascript
+var gulp = require('gulp');
+var coffeelint = require('gulp-coffeelint');
+
+gulp.task('lint', function () {
+    gulp.src('./src/*.coffee')
+        .pipe(coffeelint())
+        .pipe(coffeelint.<span class="apidocCodeKeywordSpan">reporter</span>())
+});
+```
+
+## API
+
+### `coffeelint([optFile,] [opt,] [literate,] [rules])`
+All arguments are optional. By default `gulp-coffeelint` will walk up the directory tree looking for a `coffeelint.json` (per file
+, i.e. dirname) or a `package.json` that has a `coffeelintConfig` object ([as the cli does](http://www.coffeelint.org/#usage)).
+Also, `.litcoffee` and `.coffee.md` files will be treated as Literate CoffeeScript.
+...</pre></li>
+    </ul>
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-coffeelint.utils" id="apidoc.module.gulp-coffeelint.utils">module gulp-coffeelint.utils</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-coffeelint.utils.createPluginError" id="apidoc.element.gulp-coffeelint.utils.createPluginError">
+        function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>createPluginError
+        <span class="apidocSignatureSpan">(message)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">createPluginError = function (message) {
+  return new PluginError('gulp-coffeelint', message);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-coffeelint.utils.formatOutput" id="apidoc.element.gulp-coffeelint.utils.formatOutput">
+        function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>formatOutput
+        <span class="apidocSignatureSpan">(errorReport, opt, literate)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">formatOutput = function (errorReport, opt, literate) {
+  var errorCount, ref, warningCount;
+  ref = errorReport.getSummary(), errorCount = ref.errorCount, warningCount = ref.warningCount;
+  return {
+    success: errorCount === 0,
+    results: errorReport,
+    errorCount: errorCount,
+    warningCount: warningCount,
+    opt: opt,
+    literate: literate
+  };
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-coffeelint.utils.isLiterate" id="apidoc.element.gulp-coffeelint.utils.isLiterate">
+        function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>isLiterate
+        <span class="apidocSignatureSpan">(file)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">isLiterate = function (file) {
+  return /\.(litcoffee|coffee\.md)$/.test(file);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
