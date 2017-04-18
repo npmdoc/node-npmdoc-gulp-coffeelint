@@ -56,6 +56,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.gulp-coffeelint">
+            function <span class="apidocSignatureSpan"></span>gulp-coffeelint
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.reporter">
             function <span class="apidocSignatureSpan">gulp-coffeelint.</span>reporter
             <span class="apidocSignatureSpan">(type)</span>
@@ -106,6 +115,84 @@
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.gulp-coffeelint" id="apidoc.module.gulp-coffeelint">module gulp-coffeelint</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-coffeelint.gulp-coffeelint" id="apidoc.element.gulp-coffeelint.gulp-coffeelint">
+        function <span class="apidocSignatureSpan"></span>gulp-coffeelint
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">gulp-coffeelint = function () {
+  var e, error, error1, literate, opt, optFile, params, ref1, rules;
+  params = [
+    {
+      optFile: Args.STRING | Args.Optional
+    }, {
+      opt: Args.OBJECT | Args.Optional
+    }, {
+      literate: Args.BOOL | Args.Optional
+    }, {
+      rules: Args.ARRAY | Args.Optional,
+      _default: []
+    }
+  ];
+  try {
+    ref1 = Args(params, arguments), opt = ref1.opt, optFile = ref1.optFile, literate = ref1.literate, rules = ref1.rules;
+  } catch (error) {
+    e = error;
+    throw createPluginError(e);
+  }
+  if (Array.isArray(opt)) {
+    rules = opt;
+    opt = void 0;
+  }
+  rules.map(function(rule) {
+    if (typeof rule !== 'function') {
+      throw createPluginError("Custom rules need to be of type function, not " + (typeof rule));
+    }
+    return coffeelint.registerRule(rule);
+  });
+  if (toString.call(optFile) === '[object String]') {
+    try {
+      opt = JSON.parse(fs.readFileSync(optFile).toString());
+    } catch (error1) {
+      e = error1;
+      throw createPluginError("Could not load config from file: " + e);
+    }
+  }
+  return through2.obj(function(file, enc, cb) {
+    var errorReport, fileLiterate, fileOpt, output, results;
+    fileOpt = opt;
+    fileLiterate = literate;
+    results = null;
+    output = null;
+    if (file.isNull()) {
+      this.push(file);
+      return cb();
+    }
+    if (file.isStream()) {
+      this.emit('error', createPluginError('Streaming not supported'));
+      return cb();
+    }
+    if (fileOpt === void 0) {
+      fileOpt = configfinder.getConfig(file.path);
+    }
+    if (fileLiterate === void 0) {
+      fileLiterate = isLiterate(file.path);
+    }
+    errorReport = coffeelint.getErrorReport();
+    errorReport.lint(file.relative, file.contents.toString(), fileOpt, fileLiterate);
+    output = formatOutput(errorReport, fileOpt, fileLiterate);
+    file.coffeelint = output;
+    this.push(file);
+    return cb();
+  });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 
     <h2>
