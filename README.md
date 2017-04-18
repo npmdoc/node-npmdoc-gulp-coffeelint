@@ -1,9 +1,14 @@
-# api documentation for  [gulp-coffeelint (v0.6.0)](https://github.com/janraasch/gulp-coffeelint#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-coffeelint.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-coffeelint) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-coffeelint.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-coffeelint)
+# npmdoc-gulp-coffeelint
+
+#### api documentation for  [gulp-coffeelint (v0.6.0)](https://github.com/janraasch/gulp-coffeelint#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-gulp-coffeelint.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-gulp-coffeelint) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-gulp-coffeelint.svg)](https://travis-ci.org/npmdoc/node-npmdoc-gulp-coffeelint)
+
 #### Lint your CoffeeScript using gulp and CoffeeLint
 
-[![NPM](https://nodei.co/npm/gulp-coffeelint.png?downloads=true)](https://www.npmjs.com/package/gulp-coffeelint)
+[![NPM](https://nodei.co/npm/gulp-coffeelint.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/gulp-coffeelint)
 
-[![apidoc](https://npmdoc.github.io/node-npmdoc-gulp-coffeelint/build/screenCapture.buildNpmdoc.browser._2Fhome_2Ftravis_2Fbuild_2Fnpmdoc_2Fnode-npmdoc-gulp-coffeelint_2Ftmp_2Fbuild_2Fapidoc.html.png)](https://npmdoc.github.io/node-npmdoc-gulp-coffeelint/build/apidoc.html)
+- [https://npmdoc.github.io/node-npmdoc-gulp-coffeelint/build/apidoc.html](https://npmdoc.github.io/node-npmdoc-gulp-coffeelint/build/apidoc.html)
+
+[![apidoc](https://npmdoc.github.io/node-npmdoc-gulp-coffeelint/build/screenCapture.buildCi.browser.%252Ftmp%252Fbuild%252Fapidoc.html.png)](https://npmdoc.github.io/node-npmdoc-gulp-coffeelint/build/apidoc.html)
 
 ![npmPackageListing](https://npmdoc.github.io/node-npmdoc-gulp-coffeelint/build/screenCapture.npmPackageListing.svg)
 
@@ -18,7 +23,6 @@
 {
     "author": {
         "name": "Jan Raasch",
-        "email": "jan@janraasch.com",
         "url": "http://janraasch.com"
     },
     "bugs": {
@@ -73,13 +77,11 @@
     "license": "MIT",
     "maintainers": [
         {
-            "name": "janraasch",
-            "email": "jan@janraasch.com"
+            "name": "janraasch"
         }
     ],
     "name": "gulp-coffeelint",
     "optionalDependencies": {},
-    "readme": "ERROR: No README data found!",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/janraasch/gulp-coffeelint.git"
@@ -92,115 +94,6 @@
     },
     "version": "0.6.0"
 }
-```
-
-
-
-# <a name="apidoc.tableOfContents"></a>[table of contents](#apidoc.tableOfContents)
-
-#### [module gulp-coffeelint](#apidoc.module.gulp-coffeelint)
-1.  [function <span class="apidocSignatureSpan">gulp-coffeelint.</span>reporter (type)](#apidoc.element.gulp-coffeelint.reporter)
-1.  object <span class="apidocSignatureSpan">gulp-coffeelint.</span>utils
-
-#### [module gulp-coffeelint.utils](#apidoc.module.gulp-coffeelint.utils)
-1.  [function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>createPluginError (message)](#apidoc.element.gulp-coffeelint.utils.createPluginError)
-1.  [function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>formatOutput (errorReport, opt, literate)](#apidoc.element.gulp-coffeelint.utils.formatOutput)
-1.  [function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>isLiterate (file)](#apidoc.element.gulp-coffeelint.utils.isLiterate)
-
-
-
-# <a name="apidoc.module.gulp-coffeelint"></a>[module gulp-coffeelint](#apidoc.module.gulp-coffeelint)
-
-#### <a name="apidoc.element.gulp-coffeelint.reporter"></a>[function <span class="apidocSignatureSpan">gulp-coffeelint.</span>reporter (type)](#apidoc.element.gulp-coffeelint.reporter)
-- description and source-code
-```javascript
-reporter = function (type) {
-  if (type === 'fail') {
-    return failReporter();
-  }
-  if (type === 'failOnWarning') {
-    return failOnWarningReporter();
-  }
-  if (type == null) {
-    type = 'coffeelint-stylish';
-  }
-  reporter = loadReporter(type);
-  if (typeof reporter !== 'function') {
-    throw createPluginError(type + " is not a valid reporter");
-  }
-  return reporterStream(reporter);
-}
-```
-- example usage
-```shell
-...
-'''javascript
-var gulp = require('gulp');
-var coffeelint = require('gulp-coffeelint');
-
-gulp.task('lint', function () {
-    gulp.src('./src/*.coffee')
-        .pipe(coffeelint())
-        .pipe(coffeelint.reporter())
-});
-'''
-
-## API
-
-### 'coffeelint([optFile,] [opt,] [literate,] [rules])'
-All arguments are optional. By default 'gulp-coffeelint' will walk up the directory tree looking for a 'coffeelint.json' (per file
-, i.e. dirname) or a 'package.json' that has a 'coffeelintConfig' object ([as the cli does](http://www.coffeelint.org/#usage)).
-Also, '.litcoffee' and '.coffee.md' files will be treated as Literate CoffeeScript.
-...
-```
-
-
-
-# <a name="apidoc.module.gulp-coffeelint.utils"></a>[module gulp-coffeelint.utils](#apidoc.module.gulp-coffeelint.utils)
-
-#### <a name="apidoc.element.gulp-coffeelint.utils.createPluginError"></a>[function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>createPluginError (message)](#apidoc.element.gulp-coffeelint.utils.createPluginError)
-- description and source-code
-```javascript
-createPluginError = function (message) {
-  return new PluginError('gulp-coffeelint', message);
-}
-```
-- example usage
-```shell
-n/a
-```
-
-#### <a name="apidoc.element.gulp-coffeelint.utils.formatOutput"></a>[function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>formatOutput (errorReport, opt, literate)](#apidoc.element.gulp-coffeelint.utils.formatOutput)
-- description and source-code
-```javascript
-formatOutput = function (errorReport, opt, literate) {
-  var errorCount, ref, warningCount;
-  ref = errorReport.getSummary(), errorCount = ref.errorCount, warningCount = ref.warningCount;
-  return {
-    success: errorCount === 0,
-    results: errorReport,
-    errorCount: errorCount,
-    warningCount: warningCount,
-    opt: opt,
-    literate: literate
-  };
-}
-```
-- example usage
-```shell
-n/a
-```
-
-#### <a name="apidoc.element.gulp-coffeelint.utils.isLiterate"></a>[function <span class="apidocSignatureSpan">gulp-coffeelint.utils.</span>isLiterate (file)](#apidoc.element.gulp-coffeelint.utils.isLiterate)
-- description and source-code
-```javascript
-isLiterate = function (file) {
-  return /\.(litcoffee|coffee\.md)$/.test(file);
-}
-```
-- example usage
-```shell
-n/a
 ```
 
 
