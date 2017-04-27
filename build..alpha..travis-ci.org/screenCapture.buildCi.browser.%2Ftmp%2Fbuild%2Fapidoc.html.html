@@ -65,6 +65,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.index">
+            function <span class="apidocSignatureSpan">gulp-coffeelint.</span>index
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.reporter">
             function <span class="apidocSignatureSpan">gulp-coffeelint.</span>reporter
             <span class="apidocSignatureSpan">(type)</span>
@@ -75,6 +84,28 @@
         <li>
 
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">gulp-coffeelint.</span>utils</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-coffeelint.index">module gulp-coffeelint.index</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.index.index">
+            function <span class="apidocSignatureSpan">gulp-coffeelint.</span>index
+            <span class="apidocSignatureSpan">()</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-coffeelint.index.reporter">
+            function <span class="apidocSignatureSpan">gulp-coffeelint.index.</span>reporter
+            <span class="apidocSignatureSpan">(type)</span>
+            </a>
 
         </li>
 
@@ -196,6 +227,84 @@
 
 
     <h2>
+        <a href="#apidoc.element.gulp-coffeelint.index" id="apidoc.element.gulp-coffeelint.index">
+        function <span class="apidocSignatureSpan">gulp-coffeelint.</span>index
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">index = function () {
+  var e, error, error1, literate, opt, optFile, params, ref1, rules;
+  params = [
+    {
+      optFile: Args.STRING | Args.Optional
+    }, {
+      opt: Args.OBJECT | Args.Optional
+    }, {
+      literate: Args.BOOL | Args.Optional
+    }, {
+      rules: Args.ARRAY | Args.Optional,
+      _default: []
+    }
+  ];
+  try {
+    ref1 = Args(params, arguments), opt = ref1.opt, optFile = ref1.optFile, literate = ref1.literate, rules = ref1.rules;
+  } catch (error) {
+    e = error;
+    throw createPluginError(e);
+  }
+  if (Array.isArray(opt)) {
+    rules = opt;
+    opt = void 0;
+  }
+  rules.map(function(rule) {
+    if (typeof rule !== 'function') {
+      throw createPluginError("Custom rules need to be of type function, not " + (typeof rule));
+    }
+    return coffeelint.registerRule(rule);
+  });
+  if (toString.call(optFile) === '[object String]') {
+    try {
+      opt = JSON.parse(fs.readFileSync(optFile).toString());
+    } catch (error1) {
+      e = error1;
+      throw createPluginError("Could not load config from file: " + e);
+    }
+  }
+  return through2.obj(function(file, enc, cb) {
+    var errorReport, fileLiterate, fileOpt, output, results;
+    fileOpt = opt;
+    fileLiterate = literate;
+    results = null;
+    output = null;
+    if (file.isNull()) {
+      this.push(file);
+      return cb();
+    }
+    if (file.isStream()) {
+      this.emit('error', createPluginError('Streaming not supported'));
+      return cb();
+    }
+    if (fileOpt === void 0) {
+      fileOpt = configfinder.getConfig(file.path);
+    }
+    if (fileLiterate === void 0) {
+      fileLiterate = isLiterate(file.path);
+    }
+    errorReport = coffeelint.getErrorReport();
+    errorReport.lint(file.relative, file.contents.toString(), fileOpt, fileLiterate);
+    output = formatOutput(errorReport, fileOpt, fileLiterate);
+    file.coffeelint = output;
+    this.push(file);
+    return cb();
+  });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
         <a href="#apidoc.element.gulp-coffeelint.reporter" id="apidoc.element.gulp-coffeelint.reporter">
         function <span class="apidocSignatureSpan">gulp-coffeelint.</span>reporter
         <span class="apidocSignatureSpan">(type)</span>
@@ -219,27 +328,160 @@
   return reporterStream(reporter);
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-```javascript
-var gulp = require('gulp');
-var coffeelint = require('gulp-coffeelint');
+* **custom-reporters:** allow external and custom Reporters ([c14be0f9](https://github.com/janraasch/gulp-coffeelint/commit/c14be0f9
+))
+* **reporter-publish:** use Reporter.publish instead of .reporter ([4b3231f9](https://github.com/janraasch/gulp-coffeelint/commit
+/4b3231f9))
 
-gulp.task('lint', function () {
-    gulp.src('./src/*.coffee')
-        .pipe(coffeelint())
-        .pipe(coffeelint.<span class="apidocCodeKeywordSpan">reporter</span>())
-});
-```
 
-## API
+#### Breaking Changes
 
-### `coffeelint([optFile,] [opt,] [literate,] [rules])`
-All arguments are optional. By default `gulp-coffeelint` will walk up the directory tree looking for a `coffeelint.json` (per file
-, i.e. dirname) or a `package.json` that has a `coffeelintConfig` object ([as the cli does](http://www.coffeelint.org/#usage)).
-Also, `.litcoffee` and `.coffee.md` files will be treated as Literate CoffeeScript.
+* **results:** the `results`-key now holds an instance of `Coffeelint::ErrorReport` (see https://github.com/clutchski/coffeelint
+/blob/master/src/error_report.coffee) instead of an `Array`. You may call `results.getErrors(filename)` to get the old `Array` back
+* **reporter:** running `coffeelint.<span class="apidocCodeKeywordSpan">reporter</span>('default')` now uses the *default
+* CoffeeLint reporter instead of the `coffeelint-stylish` reporter. You may run `coffeelint.reporter()` or `coffeelint.reporter(&amp;#
+x27;coffeelint-stylish')` to use the *stylish* reporter
+
+
+## 0.4.0 (2014-09-01)
+
+
+#### Features
 ...</pre></li>
     </ul>
 
 
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-coffeelint.index" id="apidoc.module.gulp-coffeelint.index">module gulp-coffeelint.index</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-coffeelint.index.index" id="apidoc.element.gulp-coffeelint.index.index">
+        function <span class="apidocSignatureSpan">gulp-coffeelint.</span>index
+        <span class="apidocSignatureSpan">()</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">index = function () {
+  var e, error, error1, literate, opt, optFile, params, ref1, rules;
+  params = [
+    {
+      optFile: Args.STRING | Args.Optional
+    }, {
+      opt: Args.OBJECT | Args.Optional
+    }, {
+      literate: Args.BOOL | Args.Optional
+    }, {
+      rules: Args.ARRAY | Args.Optional,
+      _default: []
+    }
+  ];
+  try {
+    ref1 = Args(params, arguments), opt = ref1.opt, optFile = ref1.optFile, literate = ref1.literate, rules = ref1.rules;
+  } catch (error) {
+    e = error;
+    throw createPluginError(e);
+  }
+  if (Array.isArray(opt)) {
+    rules = opt;
+    opt = void 0;
+  }
+  rules.map(function(rule) {
+    if (typeof rule !== 'function') {
+      throw createPluginError("Custom rules need to be of type function, not " + (typeof rule));
+    }
+    return coffeelint.registerRule(rule);
+  });
+  if (toString.call(optFile) === '[object String]') {
+    try {
+      opt = JSON.parse(fs.readFileSync(optFile).toString());
+    } catch (error1) {
+      e = error1;
+      throw createPluginError("Could not load config from file: " + e);
+    }
+  }
+  return through2.obj(function(file, enc, cb) {
+    var errorReport, fileLiterate, fileOpt, output, results;
+    fileOpt = opt;
+    fileLiterate = literate;
+    results = null;
+    output = null;
+    if (file.isNull()) {
+      this.push(file);
+      return cb();
+    }
+    if (file.isStream()) {
+      this.emit('error', createPluginError('Streaming not supported'));
+      return cb();
+    }
+    if (fileOpt === void 0) {
+      fileOpt = configfinder.getConfig(file.path);
+    }
+    if (fileLiterate === void 0) {
+      fileLiterate = isLiterate(file.path);
+    }
+    errorReport = coffeelint.getErrorReport();
+    errorReport.lint(file.relative, file.contents.toString(), fileOpt, fileLiterate);
+    output = formatOutput(errorReport, fileOpt, fileLiterate);
+    file.coffeelint = output;
+    this.push(file);
+    return cb();
+  });
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-coffeelint.index.reporter" id="apidoc.element.gulp-coffeelint.index.reporter">
+        function <span class="apidocSignatureSpan">gulp-coffeelint.index.</span>reporter
+        <span class="apidocSignatureSpan">(type)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">reporter = function (type) {
+  if (type === 'fail') {
+    return failReporter();
+  }
+  if (type === 'failOnWarning') {
+    return failOnWarningReporter();
+  }
+  if (type == null) {
+    type = 'coffeelint-stylish';
+  }
+  reporter = loadReporter(type);
+  if (typeof reporter !== 'function') {
+    throw createPluginError(type + " is not a valid reporter");
+  }
+  return reporterStream(reporter);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+* **custom-reporters:** allow external and custom Reporters ([c14be0f9](https://github.com/janraasch/gulp-coffeelint/commit/c14be0f9
+))
+* **reporter-publish:** use Reporter.publish instead of .reporter ([4b3231f9](https://github.com/janraasch/gulp-coffeelint/commit
+/4b3231f9))
+
+
+#### Breaking Changes
+
+* **results:** the `results`-key now holds an instance of `Coffeelint::ErrorReport` (see https://github.com/clutchski/coffeelint
+/blob/master/src/error_report.coffee) instead of an `Array`. You may call `results.getErrors(filename)` to get the old `Array` back
+* **reporter:** running `coffeelint.<span class="apidocCodeKeywordSpan">reporter</span>('default')` now uses the *default
+* CoffeeLint reporter instead of the `coffeelint-stylish` reporter. You may run `coffeelint.reporter()` or `coffeelint.reporter(&amp;#
+x27;coffeelint-stylish')` to use the *stylish* reporter
+
+
+## 0.4.0 (2014-09-01)
+
+
+#### Features
+...</pre></li>
+    </ul>
 
 
 </div>
